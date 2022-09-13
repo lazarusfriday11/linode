@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  version: 4.127.1
+  version: 4.135.0
 
   title: Linode API
   description: |
@@ -335,6 +335,9 @@ info:
           ]
         }'
     ```
+    ## Time Values
+
+    All times returned by the API are in UTC, regardless of the timezone configured within your user's profile (see `timezone` property within [Profile View](/docs/api/profile/#profile-view__responses)).
 
     ## Rate Limiting
 
@@ -438,7 +441,12 @@ paths:
       - oauth:
         - account:read_write
       requestBody:
-        description: Update contact and billing information.
+        description: |
+          Update contact and billing information.
+
+          Account properties that are excluded from a request remain unchanged.
+
+          When updating an Account's `country` to "US", an error is returned if the Account's `zip` is not a valid US zip code.
         required: true
         content:
           application/json:
@@ -469,14 +477,25 @@ paths:
                 "last_name": "Smith",
                 "phone": "555-555-1212",
                 "state": "PA",
-                "zip": "19102",
+                "tax_id": "ATU99999999",
+                "zip": "19102"
               }' \
               https://api.linode.com/v4/account
       - lang: CLI
         source: >
           linode-cli account update \
+            --address_1 "123 Main St." \
+            --address_2 "Suite 101" \
+            --city Philadelphia \
+            --company My Company \ LLC \
+            --country US \
+            --email jsmith@mycompany.com \
             --first_name John \
-            --last_name Smith
+            --last_name Smith \
+            --phone 555-555-1212 \
+            --state PA \
+            --tax_id ATU99999999 \
+            --zip 19102
   /account/cancel:
     x-linode-cli-command: account
     post:
@@ -2615,7 +2634,7 @@ paths:
         email address. Linode Managed can monitor any service or software stack reachable over TCP or HTTP. See
         our [Linode Managed guide](/docs/platform/linode-managed/)
         to learn more.
-      operationId: enableAccountManged
+      operationId: enableAccountManaged
       x-linode-cli-action: enable-managed
       security:
       - personalAccessToken: []
@@ -3253,8 +3272,6 @@ paths:
 
         All Managed Databases include automatic patch updates, which apply security patches and updates to the underlying operating system of the Managed MongoDB Database during configurable maintenance windows.
 
-        * By default, the maintenance window is set to start *every week* on *Sunday* at *20:00 UTC* and lasts for 3 hours.
-
         * If your database cluster is configured with a single node, you will experience downtime during this maintenance window when any updates occur. It's recommended that you adjust this window to match a time that will be the least disruptive for your application and users. You may also want to consider upgrading to a high availability plan to avoid any downtime due to maintenance.
 
         * **The database software is not updated automatically.** To upgrade to a new database engine version, consider deploying a new Managed Database with your preferred version. You can then migrate your databases from the original Managed Database cluster to the new one.
@@ -3428,8 +3445,6 @@ paths:
         * **Note**: Updates to the `allow_list` may take a short period of time to complete, making this command inappropriate for rapid successive updates to this property.
 
         All Managed Databases include automatic patch updates, which apply security patches and updates to the underlying operating system of the Managed MongoDB Database. The maintenance window for these updates is configured with the Managed Database's `updates` property.
-
-        * By default, the maintenance window is set to start *every week* on *Sunday* at *20:00 UTC* and lasts for 3 hours.
 
         * If your database cluster is configured with a single node, you will experience downtime during this maintenance window when any updates occur. It's recommended that you adjust this window to match a time that will be the least disruptive for your application and users. You may also want to consider upgrading to a high availability plan to avoid any downtime due to maintenance.
 
@@ -3791,7 +3806,7 @@ paths:
       x-linode-cli-action: mongodb-creds-view
       x-linode-grant: read_only
       description: |
-        Display the the root username and password for an accessible Managed MongoDB Database.
+        Display the root username and password for an accessible Managed MongoDB Database.
 
         The Database must have an `active` status to perform this command.
       security:
@@ -4032,8 +4047,6 @@ paths:
 
         All Managed Databases include automatic patch updates, which apply security patches and updates to the underlying operating system of the Managed MySQL Database during configurable maintenance windows.
 
-        * By default, the maintenance window is set to start *every week* on *Sunday* at *20:00 UTC* and lasts for 3 hours.
-
         * If your database cluster is configured with a single node, you will experience downtime during this maintenance window when any updates occur. It's recommended that you adjust this window to match a time that will be the least disruptive for your application and users. You may also want to consider upgrading to a high availability plan to avoid any downtime due to maintenance.
 
         * **The database software is not updated automatically.** To upgrade to a new database engine version, consider deploying a new Managed Database with your preferred version. You can then [migrate your databases](/docs/products/databases/managed-databases/guides/migrate-mysql/) from the original Managed Database cluster to the new one.
@@ -4201,8 +4214,6 @@ paths:
         * **Note**: Updates to the `allow_list` may take a short period of time to complete, making this command inappropriate for rapid successive updates to this property.
 
         All Managed Databases include automatic patch updates, which apply security patches and updates to the underlying operating system of the Managed MySQL Database. The maintenance window for these updates is configured with the Managed Database's `updates` property.
-
-        * By default, the maintenance window is set to start *every week* on *Sunday* at *20:00 UTC* and lasts for 3 hours.
 
         * If your database cluster is configured with a single node, you will experience downtime during this maintenance window when any updates occur. It's recommended that you adjust this window to match a time that will be the least disruptive for your application and users. You may also want to consider upgrading to a high availability plan to avoid any downtime due to maintenance.
 
@@ -4564,7 +4575,7 @@ paths:
       x-linode-cli-action: mysql-creds-view
       x-linode-grant: read_only
       description: |
-        Display the the root username and password for an accessible Managed MySQL Database.
+        Display the root username and password for an accessible Managed MySQL Database.
 
         The Database must have an `active` status to perform this command.
       security:
@@ -4805,8 +4816,6 @@ paths:
 
         All Managed Databases include automatic patch updates, which apply security patches and updates to the underlying operating system of the Managed PostgreSQL Database during configurable maintenance windows.
 
-        * By default, the maintenance window is set to start *every week* on *Sunday* at *20:00 UTC* and lasts for 3 hours.
-
         * If your database cluster is configured with a single node, you will experience downtime during this maintenance window when any updates occur. It's recommended that you adjust this window to match a time that will be the least disruptive for your application and users. You may also want to consider upgrading to a high availability plan to avoid any downtime due to maintenance.
 
         * **The database software is not updated automatically.** To upgrade to a new database engine version, consider deploying a new Managed Database with your preferred version. You can then migrate your databases from the original Managed Database cluster to the new one.
@@ -4976,8 +4985,6 @@ paths:
         * **Note**: Updates to the `allow_list` may take a short period of time to complete, making this command inappropriate for rapid successive updates to this property.
 
         All Managed Databases include automatic patch updates, which apply security patches and updates to the underlying operating system of the Managed PostgreSQL Database. The maintenance window for these updates is configured with the Managed Database's `updates` property.
-
-        * By default, the maintenance window is set to start *every week* on *Sunday* at *20:00 UTC* and lasts for 3 hours.
 
         * If your database cluster is configured with a single node, you will experience downtime during this maintenance window when any updates occur. It's recommended that you adjust this window to match a time that will be the least disruptive for your application and users. You may also want to consider upgrading to a high availability plan to avoid any downtime due to maintenance.
 
@@ -5339,7 +5346,7 @@ paths:
       x-linode-cli-action: postgresql-creds-view
       x-linode-grant: read_only
       description: |
-        Display the the root username and password for an accessible Managed PostgreSQL Database.
+        Display the root username and password for an accessible Managed PostgreSQL Database.
 
         The Database must have an `active` status to perform this command.
       security:
@@ -5532,7 +5539,7 @@ paths:
           description: Returns a paginated list of all Managed Database types.
           content:
             application/json:
-              x-linode-cli-nested-list: cluster_size
+              x-linode-cli-nested-list: engines.mysql, engines.postgresql, engines.mongodb
               x-linode-cli-use-schema:
                 type: object
                 properties:
@@ -5540,12 +5547,18 @@ paths:
                     x-linode-cli-display: 1
                   label:
                     x-linode-cli-display: 2
-                  cluster_size.quantity:
-                    x-linode-cli-display: 3
-                  cluster_size.price.hourly:
-                    x-linode-cli-display: 4
-                  cluster_size.price.monthly:
-                    x-linode-cli-display: 5
+                  _split:
+                    x-linode-cli-display: 2.5
+                  engines:
+                    properties:
+                       quantity:
+                        x-linode-cli-display: 3
+                       price:
+                         properties:
+                           hourly:
+                             x-linode-cli-display: 4
+                           monthly:
+                             x-linode-cli-display: 5
               schema:
                 allOf:
                 - $ref: '#/components/schemas/PaginationEnvelope'
@@ -5592,7 +5605,7 @@ paths:
           description: Returns a single Managed Database type.
           content:
             application/json:
-              x-linode-cli-nested-list: cluster_size
+              x-linode-cli-nested-list: engines.mysql, engines.postgresql, engines.mongodb
               x-linode-cli-use-schema:
                 type: object
                 properties:
@@ -5600,12 +5613,18 @@ paths:
                     x-linode-cli-display: 1
                   label:
                     x-linode-cli-display: 2
-                  cluster_size.quantity:
-                    x-linode-cli-display: 3
-                  cluster_size.price.hourly:
-                    x-linode-cli-display: 4
-                  cluster_size.price.monthly:
-                    x-linode-cli-display: 5
+                  _split:
+                    x-linode-cli-display: 2.5
+                  engines:
+                    properties:
+                       quantity:
+                        x-linode-cli-display: 3
+                       price:
+                         properties:
+                           hourly:
+                             x-linode-cli-display: 4
+                           monthly:
+                             x-linode-cli-display: 5
               schema:
                 $ref: '#/components/schemas/DatabaseType'
         default:
@@ -7045,6 +7064,8 @@ paths:
           * Deletes all Disks, Backups, Configs, etc.
           * Stops billing for the Linode and its associated services. You will be billed for time used
             within the billing period the Linode was active.
+
+        Linodes that are in the process of [cloning](/docs/api/linode-instances/#linode-clone) or [backup restoration](/docs/api/linode-instances/#backup-restore) cannot be deleted.
       operationId: deleteLinodeInstance
       x-linode-cli-action: delete
       security:
@@ -8669,9 +8690,7 @@ paths:
       - Linode Instances
       summary: IPv4 Address Delete
       description: >
-        Deletes a public IPv4 address associated with this Linode. This will
-        fail if it is the Linode's last remaining public IPv4 address. Private
-        IPv4 addresses cannot be removed via this endpoint.
+        Deletes a public or private IPv4 address associated with this Linode. This will fail if it is the Linode's last remaining public IPv4 address.
       operationId: removeLinodeIP
       x-linode-cli-action: ip-delete
       security:
@@ -12866,6 +12885,8 @@ paths:
         * Linodes may have no more than one assigned private IPv4 address.
         * Linodes may have no more than one assigned IPv6 range.
         * [Open a Support Ticket](/docs/api/support/#support-ticket-open) to request additional IPv4 addresses or IPv6 ranges.
+
+        **Note**: Removing an IP address that has been set as a Managed Linode's `ssh.ip` causes the Managed Linode's SSH access settings to reset to their default values. To view and configure Managed Linode SSH settings, use the **Linode's Managed Settings View** ([GET /managed/linode-settings/{linodeId}](/docs/api/managed/#linodes-managed-settings-view)) and **Linode's Managed Settings Update** ([PUT /managed/linode-settings/{linodeId}](/docs/api/managed/#linodes-managed-settings-update)) commands.
       operationId: assignIPs
       x-linode-cli-action: ip-assign
       security:
@@ -15876,7 +15897,7 @@ paths:
                 expires_in:
                   type: integer
                   minimum: 360
-                  maximum: 68400
+                  maximum: 86400
                   default: 3600
                   description: >
                     How long this signed URL will be valid for, in seconds.  If
@@ -16714,12 +16735,12 @@ paths:
       tags:
       - Profile
       summary: Two Factor Secret Create
-      description: >
-        Generates a Two Factor secret for your User. TFA will
-        not be enabled until you have successfully confirmed the code you
-        were given with [tfa-enable-confirm](/docs/api/profile/#two-factor-secret-create) (see below).
-        Once enabled, logins from untrusted computers will be required to provide
+      description: |
+        Generates a Two Factor secret for your User. To enable TFA for your User, enter the secret obtained from this command with the **Two Factor Authentication Confirm/Enable** ([POST /profile/tfa-enable-confirm](/docs/api/profile/#two-factor-authentication-confirmenable)) command.
+        Once enabled, logins from untrusted computers are required to provide
         a TFA code before they are successful.
+
+        **Note**: Before you can enable TFA, security questions must be answered for your User by accessing the **Security Questions Answer** ([POST /profile/security-questions](/docs/api/profile/#security-questions-answer)) command.
       operationId: tfaEnable
       x-linode-cli-action: tfa-enable
       security:
@@ -17240,6 +17261,107 @@ paths:
       - lang: CLI
         source: >
           linode-cli profile device-revoke 123
+  /profile/security-questions:
+    x-linode-cli-command: security-questions
+    get:
+      x-linode-grant: read_only
+      servers:
+      - url: https://api.linode.com/v4
+      tags:
+      - Profile
+      summary: Security Questions List
+      description: >
+        Returns a collection of security questions and their responses, if any, for your User Profile.
+      operationId: getSecurityQuestions
+      x-linode-cli-action: list
+      security:
+      - personalAccessToken: []
+      - oauth:
+        - account:read_only
+      responses:
+        '200':
+          description: Returns a list of security questions.
+          content:
+            application/json:
+              x-linode-cli-nested-list: security_questions
+              x-linode-cli-use-schema:
+                type: object
+                properties:
+                  security_questions.id:
+                    x-linode-cli-display: 1
+                  security_questions.question:
+                    x-linode-cli-display: 2
+                  security_questions.response:
+                    x-linode-cli-display: 3
+              schema:
+                $ref: '#/components/schemas/SecurityQuestionsGet'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+      x-code-samples:
+      - lang: Shell
+        source: >
+          curl -H "Content-Type: application/json" \
+              -H "Authorization: Bearer $TOKEN" \
+              https://api.linode.com/v4/profile/security-questions
+      - lang: CLI
+        source: >
+          linode-cli security-questions list
+    post:
+      tags:
+      - Profile
+      summary: Security Questions Answer
+      description: |
+        Adds security question responses for your User.
+
+        Requires exactly three unique questions.
+
+        Previous responses are overwritten if answered or reset to `null` if unanswered.
+
+        **Note**: Security questions must be answered for your User prior to accessing the **Two Factor Secret Create** ([POST /profile/tfa-enable](/docs/api/profile/#two-factor-secret-create)) command.
+      operationId: postSecurityQuestions
+      x-linode-cli-action: answer
+      x-linode-cli-skip: true
+      security:
+      - personalAccessToken: []
+      - oauth:
+        - account:read_write
+      requestBody:
+        description: Answer Security Questions
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecurityQuestionsPost'
+      responses:
+        '200':
+          description: Security Questions answered successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityQuestionsPost'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+      x-code-samples:
+      - lang: Shell
+        source: >
+          curl -H "Content-Type: application/json" \
+              -H "Authorization: Bearer $TOKEN" \
+              -X POST -d '{
+                  "security_questions": [
+                      {
+                          "question_id": 1,
+                          "response": "secret answer 1"
+                      },
+                      {
+                          "question_id": 2,
+                          "response": "secret answer 2"
+                      },
+                      {
+                          "question_id": 11,
+                          "response": "secret answer 3"
+                      }
+                  ]
+              }' \
+              https://api.linode.com/v4/profile/security-questions
   /profile/sshkeys:
     x-linode-cli-command: sshkeys
     get:
@@ -17447,6 +17569,165 @@ paths:
       - lang: CLI
         source: >
           linode-cli sshkey delete 42
+  /profile/phone-number:
+    x-linode-cli-command: phone
+    delete:
+      x-linode-grant: read_write
+      tags:
+      - Profile
+      summary: Phone Number Delete
+      description: |
+        Delete the verified phone number for the User making this request.
+
+        Use this command to opt out of SMS messages for the requesting User after a phone number has been verified with the **Phone Number Verify** ([POST /profile/phone-number/verify](/docs/api/profile/#phone-number-verify)) command.
+      operationId: deleteProfilePhoneNumber
+      x-linode-cli-command: delete
+      security:
+      - personalAccessToken: []
+      - oauth:
+        - account:read_write
+      responses:
+        '200':
+          description: >
+            Phone number deletion request successful.
+          content:
+            application/json:
+              schema:
+                type: object
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+      x-code-samples:
+      - lang: Shell
+        source: >
+          curl -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $TOKEN" \
+            -X DELETE \
+            https://api.linode.com/v4/profile/phone-number
+      - lang: CLI
+        source: >
+          linode-cli phone delete
+    post:
+      x-linode-grant: read_write
+      tags:
+      - Profile
+      summary: Phone Number Verification Code Send
+      description: |
+        Send a one-time verification code via SMS message to the submitted phone number. Providing your phone number helps ensure you can securely access your Account in case other ways to connect are lost. Your phone number is only used to verify your identity by sending an SMS message. Standard carrier messaging fees may apply.
+
+        * By accessing this command you are opting in to receive SMS messages. You can opt out of SMS messages by using the **Phone Number Delete** ([DELETE /profile/phone-number](/docs/api/profile/#phone-number-delete)) command after your phone number is verified.
+
+        * Verification codes are valid for 10 minutes after they are sent.
+
+        * Subsequent requests made prior to code expiration result in sending the same code.
+
+        Once a verification code is received, verify your phone number with the **Phone Number Verify** ([POST /profile/phone-number/verify](/docs/api/profile/#phone-number-verify)) command.
+      operationId: postProfilePhoneNumber
+      x-linode-cli-command: sms-code-send
+      security:
+      - personalAccessToken: []
+      - oauth:
+        - account:read_write
+      requestBody:
+        description: Enter a phone number and country code for verification.
+        content:
+          application/json:
+            schema:
+              required:
+              - iso_code
+              - phone_number
+              type: object
+              properties:
+                iso_code:
+                  type: string
+                  description: The two-letter ISO 3166 country code associated with the phone number.
+                  example: US
+                phone_number:
+                  type: string
+                  description: A valid phone number.
+                  format: phone
+                  example: 555-555-5555
+      responses:
+        '200':
+          description: >
+            Phone number verification code request successful.
+          content:
+            application/json:
+              schema:
+                type: object
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+      x-code-samples:
+      - lang: Shell
+        source: >
+          curl -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $TOKEN" \
+            -X POST -d '{
+              "iso_code": "US",
+              "phone_number": "555-555-5555"
+            }' \
+            https://api.linode.com/v4/profile/phone-number
+      - lang: CLI
+        source: >
+          linode-cli phone sms-code-send \
+            --iso-code US \
+            --phone-number 555-555-5555
+  /profile/phone-number/verify:
+    x-linode-cli-command: phone
+    post:
+      x-linode-grant: read_write
+      tags:
+      - Profile
+      summary: Phone Number Verify
+      description: |
+        Verify a phone number by confirming the one-time code received via SMS message after accessing the **Phone Verification Code Send** ([POST /profile/phone-number](/docs/api/profile/#phone-number-verification-code-send)) command.
+
+        * Verification codes are valid for 10 minutes after they are sent.
+
+        * Only the same User that made the verification code request can use that code with this command.
+
+        Once completed, the verified phone number is assigned to the User making the request. To change the verified phone number for a User, first use the **Phone Number Delete** ([DELETE /profile/phone-number](/docs/api/profile/#phone-number-delete)) command, then begin the verification process again with the **Phone Verification Code Send** ([POST /profile/phone-number](/docs/api/profile/#phone-number-verification-code-send)) command.
+      operationId: postProfilePhoneNumberVerify
+      x-linode-cli-command: verify
+      security:
+      - personalAccessToken: []
+      - oauth:
+        - account:read_write
+      requestBody:
+        description: Enter a phone verification code for confirmation.
+        content:
+          application/json:
+            schema:
+              required:
+              - otp_code
+              type: object
+              properties:
+                otp_code:
+                  type: string
+                  description: The one-time code received via SMS message after accessing the **Phone Verification Code Send** ([POST /profile/phone-number](/docs/api/profile/#phone-number-verification-code-send)) command.
+                  example: "US"
+      responses:
+        '200':
+          description: >
+            Phone number verification successful.
+          content:
+            application/json:
+              schema:
+                type: object
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+      x-code-samples:
+      - lang: Shell
+        source: >
+          curl -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $TOKEN" \
+            -X POST -d '{
+              "otp_code": "123456"
+            }' \
+            https://api.linode.com/v4/profile/phone-number/verify
+      - lang: CLI
+        source: >
+          linode-cli phone verify \
+            --otp_code 123456
   /profile/preferences:
     x-linode-cli-command: profile
     get:
@@ -18914,6 +19195,7 @@ components:
       properties:
         active_promotions:
           type: array
+          readOnly: true
           items:
             $ref: '#/components/schemas/Promotion'
         active_since:
@@ -18947,6 +19229,19 @@ components:
             the estimate.
           example: 145
           x-linode-cli-display: 4
+        billing_source:
+          type: string
+          readOnly: true
+          enum:
+            - akamai
+            - linode
+          description: >
+            The source of service charges for this Account, as determined by its relationship with Akamai.
+
+            Accounts that are associated with Akamai-specific customers return a value of `akamai`.
+
+            All other Accounts return a value of `linode`.
+          example: akamai
         capabilities:
           type: array
           items:
@@ -19026,8 +19321,8 @@ components:
           description: >
             The tax identification number associated with this Account,
             for tax calculations in some countries.
-            If you do not live in a country that collects tax, this should be `null`.
-          maxLength: 100
+            If you do not live in a country that collects tax, this should be an empty string (`""`).
+          maxLength: 25
           example: ATU99999999
         euuid:
           type: string
@@ -19507,7 +19802,11 @@ components:
           x-linode-cli-display: 3
         label:
           type: string
-          description: The database backup's label, for display purposes only.
+          maxLength: 30
+          description: |
+            The database backup's label, for display purposes only.
+
+            Must include only ASCII letters or numbers.
           example: Scheduled - 02/04/22 11:11 UTC-XcCRmI
           x-linode-cli-display: 2
         created:
@@ -23665,29 +23964,41 @@ components:
                 If true, Linode special forces may access this Linode over
                 ssh to respond to Issues.
               example: true
+              default: true
             user:
               type: string
               minLength: 0
               maxLength: 32
-              description: >
-                The user Linode's special forces should use when accessing this
+              description: |
+                The specific user, if any, Linode's special forces should use when accessing this
                 Linode to respond to an issue.
+
+                The default `null` value corresponds to the root user.
               example: linode
+              default: null
+              nullable: true
             ip:
               type: string
               format: ip
-              description: >
+              description: |
                 The IP Linode special forces should use to access this Linode
                 when responding to an Issue.
-              example: 12.34.56.78
+
+                By default, any of a Linode's IP addresses can be used for incident response access.
+              example: "12.34.56.78"
+              default: any
             port:
               type: integer
               minimum: 1
               maximum: 65535
-              description: >
+              description: |
                 The port Linode special forces should use to access this Linode
                 over ssh to respond to an Issue.
+
+                The default `null` value corresponds to port 22.
               example: 22
+              nullable: true
+              default: null
     ManagedService:
       type: object
       description: >
@@ -25037,6 +25348,15 @@ components:
             as necessary.
           example: example-user@gmail.com
           x-linode-cli-display: 2
+        verified_phone_number:
+          type: string
+          format: phone
+          readOnly: true
+          description: |
+            The phone number verified for this Profile with the **Phone Number Verify** ([POST /profile/phone-number/verify](/docs/api/profile/#phone-number-verify)) command.
+
+            `null` if this Profile has no verified phone number.
+          example: "+5555555555"
         timezone:
           type: string
           description: >
@@ -25363,9 +25683,11 @@ components:
             This StackScript installs and configures MySQL
         images:
           type: array
-          description: >
+          description: |
             An array of Image IDs. These are the images that can be deployed
             with this Stackscript.
+
+            `any/all` indicates that all available image distributions are accepted.
           items:
             type: string
           example:
@@ -25971,6 +26293,58 @@ components:
             The last IP Address to successfully authenticate with this TrustedDevice.
           example: 12.34.56.78
           readOnly: true
+    SecurityQuestion:
+      type: object
+      description: Single security question and response object.
+      properties:
+        id:
+          type: integer
+          description: The ID representing the security question.
+          example: 1
+        question:
+          type: string
+          readOnly: true
+          description: The security question.
+          example: "In what city were you born?"
+        response:
+          type: string
+          minLength: 3
+          maxLength: 17
+          description: |
+            The security question response.
+          example: "Gotham City"
+    SecurityQuestionsGet:
+      type: object
+      description: Security questions and responses object for GET operation.
+      properties:
+        security_questions:
+          type: array
+          items:
+            type: object
+            description: Single security question and response object for GET operation.
+            properties:
+              id:
+                $ref: '#/components/schemas/SecurityQuestion/properties/id'
+              question:
+                $ref: '#/components/schemas/SecurityQuestion/properties/question'
+              response:
+                $ref: '#/components/schemas/SecurityQuestion/properties/response'
+    SecurityQuestionsPost:
+      type: object
+      description: Security questions and responses object for POST operation.
+      properties:
+        security_questions:
+          type: array
+          items:
+            type: object
+            description: Single security question and response object for POST operation.
+            properties:
+              question_id:
+                $ref: '#/components/schemas/SecurityQuestion/properties/id'
+              response:
+                $ref: '#/components/schemas/SecurityQuestion/properties/response'
+              security_question:
+                $ref: '#/components/schemas/SecurityQuestion/properties/question'
     ServiceTransfer:
       type: object
       description: >

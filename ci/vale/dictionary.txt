@@ -49,6 +49,7 @@ anonymize
 anonymizing
 ansi
 ansible
+ansible's
 anticompetitive
 antispam
 anycast
@@ -95,6 +96,7 @@ autoconfiguration
 autoconfigure
 autodiscover
 autohosting
+autoindex
 autojoin
 autojump
 autologin
@@ -153,6 +155,7 @@ bernd
 berners
 bgpd
 bialek
+bin_t
 bing
 binlog
 biomes
@@ -189,6 +192,7 @@ brightbox
 browserify
 bs4
 btmp
+Budibase
 bufio
 bugtracker
 buildbot
@@ -495,6 +499,7 @@ dsn
 du
 duf
 ducati
+dumpall
 dust2
 dvcs
 e2fsck
@@ -646,6 +651,7 @@ froxlor
 fs
 fsck
 fstab
+ftp_client
 fullchain
 func
 fzf
@@ -1072,6 +1078,7 @@ linode
 linode's
 linodego
 linodes
+linroot
 linter
 lish
 liskov
@@ -1185,6 +1192,7 @@ metacharacter
 metacharacters
 metacity
 metapackage
+metapackages
 metaparameters
 metasploit
 meterpreter
@@ -1198,6 +1206,7 @@ microservice
 microservices
 microsystems
 microweb
+Microweber
 middleware
 mimikatz
 minecraft
@@ -1229,6 +1238,7 @@ mkv
 mnesia
 mngtmpaddr
 moby
+mod_autoindex
 moddable
 modinfo
 modsecurity
@@ -1239,6 +1249,7 @@ mongodb
 mongod
 mongodump
 mongoimport
+mongorestore
 mongosh
 monit
 monitorix
@@ -1291,6 +1302,7 @@ mysqlclient10
 mysqld
 mysqldefault
 mysqldump
+mysql_config_editor
 mytestdb
 myuser
 mzet
@@ -1459,6 +1471,7 @@ parentheticals
 parsedate
 partitionless
 partyline
+passcode
 passdb
 passlib
 passphraseless
@@ -1481,6 +1494,9 @@ permalink
 permalinks
 Petazzoni
 pflogsumm
+pg_dump
+pg_dumpall
+pg_restore
 pgpass
 pharmer
 pharo
@@ -1561,6 +1577,8 @@ procfile
 procmail
 procs
 productpage
+promlens
+promscale
 prosodyctl
 proto
 protobuf
@@ -2079,11 +2097,11 @@ txz
 tz
 tzurbaev
 uber
+Ubiquiti
 ubuntu
 ucd
 udp
 ufw
-udp
 ui
 uidl
 umount
@@ -2217,6 +2235,8 @@ wasn
 wasm
 wav
 wazuh
+wchar
+wchar_t
 webadmin
 webalizer
 webapp
@@ -2258,6 +2278,7 @@ whois
 whowatch
 wi
 wiktionary
+Widenius's
 widgits
 wildfly
 wimey
